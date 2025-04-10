@@ -1,0 +1,35 @@
+version: 2
+
+models:
+  - name: lsoa
+    description: References to the Lower Layer Super Output Area that the anonymised point falls into, according to the LSOA boundaries provided by the Office for National Statistics.
+    #data_tests:
+    #  - unique_key:
+    #      columns: [ lsoa_code ]
+
+  - name: crime_type
+    description: One of the crime types listed in the Police.UK FAQ https://www.police.uk/pu/about-police.uk-crime-data/
+    #data_tests:
+    #  - unique_key:
+    #      columns: [ crime_type_id ]
+
+  - name: police_force
+    description: The police force that provided the data about the crime
+    #data_tests:
+    #  - unique_key:
+    #     columns: [ crime_type_id ]
+
+  - name: outcome_type
+    description: Outcome type or category
+    #data_tests:
+    #  - unique_key:
+    #      columns: [ outcome_type_id ]
+
+  - name: fact_crimes
+    description: Crimes street-level data (1st registration)
+
+  - name: fact_outcomes
+    description: Outcomes of investigation data (last outcome)
+
+  - name: calendar
+    description: Calendar date dimension by 1st day of month. Facts are considered by month.
