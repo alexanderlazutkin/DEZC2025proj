@@ -3,10 +3,12 @@ version: 2
 sources:
   - name: s3
     description: Crimes in MinIO S3 bucket
-    meta:
-      external_location: s3://dezc-project/raw/{name}/*/*.parquet
     tables:
       - name: crimes
         description: Crimes and anti-social behaviour (ASB) incidents on street-level data 
+        config:
+          external_location: s3://dezc-project/raw/crimes/*/*.parquet
       - name: outcomes
         description: Outcomes of investigation data
+        config:
+          external_location: s3://dezc-project/raw/outcomes/*/*.parquet
