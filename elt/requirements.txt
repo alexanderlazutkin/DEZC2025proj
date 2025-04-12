@@ -1,9 +1,0 @@
-dbt-core==1.9.2
-dbt-duckdb==1.9.2
-streamlit
-psycopg2-binary
-pycountry
-sqlalchemy
-emoji
-diagrams
-python-dotenv
