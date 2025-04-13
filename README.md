@@ -99,4 +99,4 @@ npm run sources
 - Go to http://localhost:3000/ to demo page
 
 
-![[Pasted image 20250413213849.png]]
+![[[Pasted image 20250413213849.png](https://github.com/alexanderlazutkin/DEZC2025proj/blob/main/img/Kestra%20flow.png)]]
