@@ -32,7 +32,7 @@ select
   , c.region
   , coalesce(o.outcome_type_id,' N/A') as outcome_type_id
   , c.month_date as registered_month_date
-  , o.month_date as outcome_month_month_date
+  , o.month_date as outcome_month_date
   , datediff('month',c.month_date ,o.month_date) as duration_months
   , case when o.month_date is null then true else false end as is_missing_outcome
   , c.file_id
