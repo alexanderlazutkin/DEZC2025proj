@@ -79,7 +79,8 @@ Importing flow `zc_flow` in Kestra
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@flows/dezc_project.zc_flow.yaml
 ``` 
 and run the flow
-![[Pasted image 20250413170317.png]]
+![Kestra flow](/img/Kestra%20flow.png "Kestra flow")
+
 Check data file and add permissions to query
 ```sh
 cd ~/DEZC2025proj
@@ -98,5 +99,4 @@ npm run sources
 ```
 - Go to http://localhost:3000/ to demo page
 
-
-![[[Pasted image 20250413213849.png](https://github.com/alexanderlazutkin/DEZC2025proj/blob/main/img/Kestra%20flow.png)]]
+![Report example with crime statistics](/img/Example.png "Report example with crime statistics")
