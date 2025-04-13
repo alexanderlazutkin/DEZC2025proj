@@ -3,14 +3,14 @@
 ## Intro
 The main goal of the project is to evaluate crime statistics in the UK and the most criminal areas of the country. In the future, it is planned to develop the project. 
 Using the Police UK (Home | data.police.uk) extract the data related to street-level crime and outcome data as well as the nearest police stations. 
-### Data source documштentation
+
+### Data source info
 - Data summary:  https://data.police.uk/about/
 - Police API Documentation: https://data.police.uk/docs/
 
 
-If you want to reproduce this project, please follow the instructions below:
-To configure environment for the project follow instructions bellow
-
+#### Data flow schema
+![Data flow shema](/img/Data%20flow%20schema.png "Data flow shema")
 
 The next technologies were selected for this project
 - Kestra as orchestrator
@@ -19,12 +19,12 @@ The next technologies were selected for this project
 - Evidence as reporting tool
 - Minio as S3 Data lake storage
 
-  
 _P.S. Cloud solution was outdated_
 
-#### Data flow schema
-![Data flow shema](/img/Data%20flow%20schema.png "Data flow shema")
 
+
+If you want to reproduce this project, please follow the instructions below:
+To configure environment for the project follow instructions bellow
 
 ## Setup environment
 
