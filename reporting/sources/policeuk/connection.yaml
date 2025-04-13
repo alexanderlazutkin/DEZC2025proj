@@ -1,0 +1,5 @@
+# This file was automatically generated
+name: policeuk
+type: duckdb
+options:
+  filename: policeuk.duckdb

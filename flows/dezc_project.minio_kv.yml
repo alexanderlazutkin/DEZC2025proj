@@ -1,0 +1,64 @@
+id: minio_kv
+namespace: dezc_project
+
+tasks:
+  - id: aws_access_key_id
+    type: io.kestra.plugin.core.kv.Set
+    key: ACCESS_KEY_ID
+    kvType: STRING
+    value: QUNyqk2GmDJKw0Jw1cCW
+
+  - id: aws_secret_access_key
+    type: io.kestra.plugin.core.kv.Set
+    key: SECRET_KEY_ID
+    kvType: STRING
+    value: JrBQDM7O8bvdsUpFRTTp9vJN0EdtHmmGOfDyU4yN
+
+  - id: bucket_name
+    type: io.kestra.plugin.core.kv.Set
+    key: BUCKET_NAME
+    kvType: STRING
+    value: dezc-project
+
+  - id: dataset
+    type: io.kestra.plugin.core.kv.Set
+    key: DATASET
+    kvType: STRING
+    value: staging
+
+  - id: endpoint_url
+    type: io.kestra.plugin.core.kv.Set
+    key: ENDPOINT_URL
+    kvType: STRING
+    value: minio:9000
+
+  - id: region
+    type: io.kestra.plugin.core.kv.Set
+    key: REGION
+    kvType: STRING
+    value: eu-central-1
+
+  - id: minio_root_user
+    type: io.kestra.plugin.core.kv.Set
+    key: MINIO_ROOT_USER
+    kvType: STRING
+    value: minioadmin
+
+  - id: minio_root_password
+    type: io.kestra.plugin.core.kv.Set
+    key: MINIO_ROOT_PASSWORD
+    kvType: STRING
+    value: minioadmin
+
+  - id: duckdb_path
+    type: io.kestra.plugin.core.kv.Set
+    key: DUCKDB_PATH
+    kvType: STRING
+    value: /data/policeuk.duckdb
+
+  - id: motherduck_token
+    type: io.kestra.plugin.core.kv.Set
+    key: MOTHERDUCK_TOKEN
+    kvType: STRING
+    value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImxhenV0a2luYW5AZ21haWwuY29tIiwic2Vzc2lvbiI6ImxhenV0a2luYW4uZ21haWwuY29tIiwicGF0IjoiR2o2cEtiOUJUd2I0U1BUY3MySnlwWWNIVjRVbXoyOUJyT1F4Z3ptTWVVbyIsInVzZXJJZCI6Ijk4ODU3MjI4LWEyOTUtNDEyNS05MmYwLTk0MzJkYzc3ZjAwZCIsImlzcyI6Im1kX3BhdCIsInJlYWRPbmx5IjpmYWxzZSwidG9rZW5UeXBlIjoicmVhZF93cml0ZSIsImlhdCI6MTc0NDUzMjAzNH0.q3ytwmtgmFQu3RuMrsLVZL_TyK_tdN9WvKpahwWJ9V4
+

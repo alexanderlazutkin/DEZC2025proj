@@ -1,0 +1,148 @@
+id: zc_flow
+namespace: dezc_project
+
+
+inputs:
+  - id: filename
+    type: SELECT
+    displayName: Select filename
+    values: ["2025-01", "2024-12"]
+    defaults: "2025-01"
+
+variables:
+  url_file: "https://getfile.dokpub.com/yandex/get/https://disk.yandex.ru/d/93oVdGQPEdyq-g" #"https://data.police.uk/data/archive/{{inputs.filename}}.zip" # ~1.6Gb "https://getfile.dokpub.com/yandex/get/https://disk.yandex.ru/d/93oVdGQPEdyq-g"
+
+tasks:
+  - id: get_zip_file
+    description: Getting zip file
+    type: io.kestra.plugin.core.http.Download
+    uri: "{{render(vars.url_file)}}"
+
+  - id: unzip
+    description: Unzipping file
+    type: io.kestra.plugin.compress.ArchiveDecompress
+    algorithm: ZIP
+    from: "{{ outputs.get_zip_file.uri }}"
+
+  - id: outcomes_csv_to_parquet
+    description: Using DuckDB to convert outcomes csv's data to parquet and reduce time & space
+    type: io.kestra.plugin.jdbc.duckdb.Query
+    url: 'jdbc:duckdb:' #jdbc:duckdb:/data/outcomes_convert_to_parquet.db 
+    inputFiles: "{{ outputs.unzip.files }}"
+    sql: |
+      INSTALL httpfs; 
+      LOAD httpfs; 
+      SET s3_region        = '{{kv('REGION')}}'; 
+      SET s3_url_style     = 'path'; 
+      SET s3_endpoint      = '{{kv('ENDPOINT_URL')}}'; 
+      SET s3_use_ssl       = false; 
+      SET s3_access_key_id = '{{kv('ACCESS_KEY_ID')}}' ;
+      SET s3_secret_access_key='{{kv('SECRET_KEY_ID')}}';
+      COPY (
+       SELECT
+          cast(concat("Month",'-01') as date) as month_date
+        , replace("Month",'-','') as month
+        , "Crime ID" as crime_id
+        , "Outcome type" as outcome_type
+        , "Reported by" as reported_by
+        , "Falls within" as falls_within
+        , "Location" as "location", longitude, latitude
+        , "LSOA code" as lsoa_code, "LSOA name" as lsoa_name
+        , filename as file_name
+        , current_localtimestamp() as loaded_dt 
+       FROM read_csv_auto('**/*-outcomes.csv', header=true, null_padding=true, ignore_errors=true, filename = true, types={'Longitude': 'double','Latitude': 'double'})
+          )
+      TO 's3://{{kv('BUCKET_NAME')}}/raw/outcomes' (OVERWRITE_OR_IGNORE, FORMAT PARQUET, ROW_GROUP_SIZE 1000000, PARTITION_BY (month));
+
+  - id: crimes_csv_to_parquet
+    description: Using DuckDB to convert crimes csv's data to parquet and reduce time & space
+    type: io.kestra.plugin.jdbc.duckdb.Query
+    url: 'jdbc:duckdb:' #jdbc:duckdb:/data/crimes_convert_to_parquet.db 
+    inputFiles: "{{ outputs.unzip.files }}"
+    sql: |
+      INSTALL httpfs; 
+      LOAD httpfs; 
+      SET s3_region        = '{{kv('REGION')}}'; 
+      SET s3_url_style     = 'path'; 
+      SET s3_endpoint      = '{{kv('ENDPOINT_URL')}}'; 
+      SET s3_use_ssl       = false; 
+      SET s3_access_key_id = '{{kv('ACCESS_KEY_ID')}}' ;
+      SET s3_secret_access_key='{{kv('SECRET_KEY_ID')}}';
+      COPY (
+       SELECT
+          cast(concat("Month",'-01') as date) as month_date
+        , replace("Month",'-','') as month
+        , cast("Crime ID" as binary) as crime_id
+        , "Crime type" as crime_type
+        , "Reported by" as reported_by  
+        , "Falls within" as falls_within
+        , "Location" as "location", longitude, latitude
+        , "LSOA code" as lsoa_code, "LSOA name" as lsoa_name
+        , "Last outcome category" as last_outcome_category
+        , Context as context
+        , filename as file_name
+        , current_localtimestamp() as loaded_dt 
+       FROM read_csv_auto('**/*-street.csv', header=true, null_padding=true, ignore_errors=true, filename = true, types={'Longitude': 'double','Latitude': 'double'})
+          )
+      TO 's3://{{kv('BUCKET_NAME')}}/raw/crimes' (OVERWRITE_OR_IGNORE, FORMAT PARQUET, ROW_GROUP_SIZE 1000000, PARTITION_BY (month));
+
+  - id: purge_src_files # clear all temporary files after task is done
+    type: io.kestra.plugin.core.storage.PurgeCurrentExecutionFiles
+    description: This will remove output files. If you'd like to explore Kestra outputs, disable it.
+    disabled: false
+
+  - id: dbt
+    type: io.kestra.plugin.core.flow.WorkingDirectory
+    tasks:
+      - id: dbt_sync
+        type: io.kestra.plugin.git.SyncNamespaceFiles
+        url: https://github.com/alexanderlazutkin/DEZC2025proj
+        branch: master
+        namespace: "{{ flow.namespace }}"
+        gitDirectory: dbt
+        dryRun: false
+
+      - id: dbt_run
+        type: io.kestra.plugin.dbt.cli.DbtCLI
+        containerImage: ghcr.io/kestra-io/dbt-duckdb:latest
+        #projectDir: dbt
+        outputFiles:
+          - policeuk.duckdb
+        taskRunner:
+            type: io.kestra.plugin.scripts.runner.docker.Docker
+        commands:
+          - dbt deps --project-dir dbt
+          - dbt run --project-dir dbt
+        profiles: |
+          policeuk:
+            outputs:
+              dev:
+                type: duckdb
+                path: policeuk.duckdb
+                extensions:
+                  - httpfs
+                  - parquet
+                settings:
+                  s3_region: '{{kv('REGION')}}' 
+                  s3_endpoint: 'host.docker.internal:9000' 
+                  s3_url_style: 'path'
+                  s3_use_ssl: false
+                  s3_access_key_id: '{{kv('ACCESS_KEY_ID')}}' 
+                  s3_secret_access_key: '{{kv('SECRET_KEY_ID')}}'
+                fixed_retries: 1
+                threads: 4
+                timeout_seconds: 600
+            target: dev
+
+      - id: copy_db_file
+        type: io.kestra.plugin.scripts.shell.Commands
+        taskRunner:
+          type: io.kestra.plugin.core.runner.Process
+        commands:
+          - cp {{ outputs.dbt_run.outputFiles['policeuk.duckdb'] }} /data/policeuk.duckdb
+
+      - id: purge_dbt_files # clear all temporary files after task is done
+        type: io.kestra.plugin.core.storage.PurgeCurrentExecutionFiles
+        description: This will remove output files. If you'd like to explore Kestra outputs, disable it.
+        disabled: false
+

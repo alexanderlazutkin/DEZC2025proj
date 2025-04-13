@@ -1,0 +1,104 @@
+version: '3.8'
+
+volumes:
+  minio_data:
+    driver: local
+  postgres-data:
+    driver: local
+  kestra-data:
+    driver: local
+
+networks:
+  kestra_net:
+
+services:
+  # Minio as S3 storage
+  minio:
+    image: minio/minio:RELEASE.2025-03-12T18-04-18Z-cpuv1
+    container_name: minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - minio_data:/data
+    command: ["server", "/data", "--console-address", ":9001"]
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 2s
+      timeout: 2s
+      retries: 5
+    networks:
+      kestra_net:
+
+  postgres:
+    image: postgres:17.4
+    restart: always
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: kestra
+      POSTGRES_USER: kestra
+      POSTGRES_PASSWORD: kestr1
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+    networks:
+      kestra_net:
+
+  kestra:
+    image: kestra/kestra:latest
+    restart: always
+    pull_policy: always
+    user: "root"
+    command: server standalone
+    volumes:
+      - ./kestra-data:/app/storage
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./tmp:/tmp/kestra-wd  
+      - ./data:/data
+    environment:
+      KESTRA_CONFIGURATION: |
+        datasources:
+          postgres:
+            url: jdbc:postgresql://postgres:5432/kestra
+            driverClassName: org.postgresql.Driver
+            username: kestra
+            password: kestr1
+        kestra:
+          server:
+            basicAuth:
+              enabled: false
+              username: "admin@kestra.io" # it must be a valid email address
+              password: kestra
+          repository:
+            type: postgres
+          storage:
+            type: local
+            local:
+              basePath: "/app/storage"
+          queue:
+            type: postgres
+          tasks:
+            tmpDir:
+              path: /tmp/kestra-wd/tmp
+          url: http://localhost:8080/
+          plugins:
+            configurations:
+              - type: io.kestra.plugin.scripts.runner.docker.Docker
+                values: 
+                  volume-enabled: true
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    depends_on:
+      postgres:
+        condition: service_started
+    networks:
+      kestra_net:
