@@ -18,13 +18,12 @@ The next technologies were selected for this project
 - DuckDB as "pocket" data warehouse and in-progress database
 - Evidence as reporting tool
 - Minio as S3 Data lake storage
+
+  
 _P.S. Cloud solution was outdated_
 
 #### Data flow schema
-
-
-
-
+![Data flow shema](/img/Data%20flow%20schema.png "Data flow shema")
 
 
 ## Setup environment
