@@ -1,7 +1,8 @@
 
 # The Final project was developed as part of Data Engineering Zoomcamp 2025.
 ## Intro
-The main goal of the project is to evaluate crime statistics in the UK and the most criminal areas of the country. In the future, it is planned to develop the project. 
+The main goal of the project is to evaluate crime statistics in the UK and the most criminal regions and types of crime.
+In the future, it is planned to develop the project. 
 Using the Police UK (Home | data.police.uk) extract the data related to street-level crime and outcome data as well as the nearest police stations. 
 
 ### Data source info
@@ -17,11 +18,13 @@ The next technologies were selected for this project
 - Dbt as popular transformation framework
 - DuckDB as "pocket" data warehouse and in-progress database
 - Evidence as reporting tool
-- Minio as S3 Data lake storage
+- Minio as S3 Data lake
 
 _P.S. Cloud solution was outdated_
 
+From the address provided by the API, we download the zip file of our choice. One zip file has~1.6 Gb compressed size and contains several thousand CSV files (~7Gb in raw size). To reduce the amount of processing data and time, DuckDB in in-memory mode was selected. 
 
+The transformed data is saved to parquet files in Minio S3, which are then used as Dbt sources in the DuckDB persistent database (our data warehouse)
 
 If you want to reproduce this project, please follow the instructions below:
 To configure environment for the project follow instructions bellow
@@ -46,16 +49,17 @@ sudo docker compose up -d
 
 Build & Start Services
 [+] Running 5/5
- ✔ Network project_kestra_net    Created                                                                 0.3s
- ✔ Container minio                       Started                                                        49.9s
- ✔ Container project-postgres-1  Started                                                                49.8s
- ✔ Container project-kestra-1       Started                                                              9.5s
+ ✔ Network project_kestra_net    Created                                                         0.3s
+ ✔ Container minio               Started                                                        49.9s
+ ✔ Container project-postgres-1  Started                                                        49.8s
+ ✔ Container project-kestra-1    Started                                                         9.5s
 
 
 ### Run & configure MinIO
 Connect to minio UI http://localhost:9001/login with user: `minioadmin` and password: `minioadmin`
  
 Go to http://localhost:9001/access-keys/new-account and create access and secret keys. 
+
 Go to http://localhost:9001/settings/configurations/region and setup region `eu-central-1` to server location and restart the service.
 
 ### Run & configure Kestra OSS
