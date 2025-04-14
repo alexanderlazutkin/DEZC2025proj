@@ -95,7 +95,7 @@ Notes:
 
 ### Run & configure Evidence UI 
 - Install Evidence with VS Code extension as explained [here](https://docs.evidence.dev/install-evidence/ ) and start Evidence server
-- Copy policeuk.duckdb from `./data/` to ` ./reporting/sources/policeuk/`
+- Copy policeuk.duckdb from `./data/` to ` ./reporting/sources/policeuk/` (This is a temporary solution for now)
 - Run (if required) to update reports
 ```bash
 npm run sources
