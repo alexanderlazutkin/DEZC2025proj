@@ -21,7 +21,6 @@ The next technologies were selected for this project
 - Evidence as reporting tool
 - Minio as S3 Data lake
 
-_P.S. Cloud solution was outdated_
 
 From the address provided by the API, we download the zip file of our choice. One zip file has~1.6 Gb compressed size and contains several thousand CSV files (~7Gb in raw size). To reduce the amount of processing data and time, DuckDB in in-memory mode was selected. 
 
