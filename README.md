@@ -3,7 +3,7 @@
 
 ## Intro
 The main goal of the project is to evaluate crime statistics in the UK and the most criminal regions and types of crime.
-In the future, it is planned to develop the project. 
+In the future, it is planned to develop the project with MoterDuck
 Using the Police UK (Home | data.police.uk) extract the data related to street-level crime and outcome data as well as the nearest police stations. 
 
 ### Data source info
