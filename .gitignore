@@ -8,7 +8,6 @@ secrets.toml
 # ignore duckdb
 *.duckdb
 *.wal
-tmp/
+tmp/!.gitkeep
 logs/
-data/
-kestra-data/
+kestra-data/!.gitkeep

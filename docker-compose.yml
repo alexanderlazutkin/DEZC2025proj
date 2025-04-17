@@ -62,7 +62,7 @@ services:
       - ./kestra-data:/app/storage
       - /var/run/docker.sock:/var/run/docker.sock
       - ./tmp:/tmp/kestra-wd  
-      - ./data:/data
+      - ./reporting/sources/policeuk:/data
     environment:
       KESTRA_CONFIGURATION: |
         datasources:
