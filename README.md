@@ -48,38 +48,39 @@ sudo docker compose up -d
 ```
 
 Build & Start Services
+```sh
 [+] Running 5/5
- ✔ Network project_kestra_net    Created                                                         0.3s
- ✔ Container minio               Started                                                        49.9s
- ✔ Container project-postgres-1  Started                                                        49.8s
- ✔ Container project-kestra-1    Started                                                         9.5s
-
+ ✔ Network kestra_net    Created                                                         0.3s
+ ✔ Container minio       Started                                                        49.9s
+ ✔ Container postgres-1  Started                                                        49.8s
+ ✔ Container kestra-1    Started                                                         9.5s
+```
 
 ### Run & configure MinIO
 Connect to minio UI http://localhost:9001/login with user: `minioadmin` and password: `minioadmin`
  
-Go to http://localhost:9001/access-keys/new-account and create access and secret keys. 
+Go to http://localhost:9001/access-keys/new-account and create access and secret keys (you can use existing in dezc_project.minio_kv.yml) 
 
 Go to http://localhost:9001/settings/configurations/region and setup region `eu-central-1` to server location and restart the service.
 
 ### Run & configure Kestra OSS
 Go to Kestra UI http://localhost:8080/ to check 
 
-Change flow `flows/minio_kv.yaml` parameters for own: ACCESS_KEY_ID, SECRET_KEY_ID and so on (see MinIO configuration) 
+Change flow `dezc_project.minio_kv.yml` parameters for own: ACCESS_KEY_ID, SECRET_KEY_ID and so on (see MinIO configuration) 
 Importing flow  `minio_kv` in Kestra
 ```sh
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@flows/dezc_project.minio_kv.yaml
+curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@flows/dezc_project.minio_kv.yml
 ```
 
-Importing flow `minio_create_bucket` in Kestra 
+Importing flow `minio_create_bucket` in Kestra or do it manually
 ```sh
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@flows/dezc_project.minio_create_bucket.yaml
+curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@flows/dezc_project.minio_create_bucket.yml
 ```
-Go to [MinIO UI ](http://localhost:9001/buckets/dezc-project/admin/summary)to check the bucket creation and change access policy to `Public` for the bucket 
+Go to [MinIO UI ](http://localhost:9001/buckets/dezc-project/admin/summary) to check the bucket creation and change access policy to `Public` for the bucket 
 
-Importing flow `zc_flow` in Kestra 
+Importing flow `main_flow` in Kestra 
 ```sh
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@flows/dezc_project.zc_flow.yaml
+curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@flows/dezc_project.main_flow.yml
 ``` 
 and run the flow
 ![Kestra flow](/img/Kestra%20flow.png "Kestra flow")
@@ -95,8 +96,8 @@ Notes:
 
 ### Run & configure Evidence UI 
 - Install Evidence with VS Code extension as explained [here](https://docs.evidence.dev/install-evidence/ ) and start Evidence server
-- Copy policeuk.duckdb from `./data/` to ` ./reporting/sources/policeuk/` (This is a temporary solution for now)
-- Run (if required) to update reports
+- Copy policeuk.duckdb from `./data/` to ` ./reporting/sources/policeuk/` (if required)
+- Run to update reports (if required) 
 ```bash
 npm run sources
 ```

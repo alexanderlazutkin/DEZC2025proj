@@ -1,4 +1,4 @@
-id: zc_flow
+id: main_flow
 namespace: dezc_project
 
 
@@ -140,6 +140,7 @@ tasks:
           type: io.kestra.plugin.core.runner.Process
         commands:
           - cp {{ outputs.dbt_run.outputFiles['policeuk.duckdb'] }} /data/policeuk.duckdb
+          - sudo chmod 777 /data/policeuk.duckdb
 
       - id: purge_dbt_files # clear all temporary files after task is done
         type: io.kestra.plugin.core.storage.PurgeCurrentExecutionFiles
