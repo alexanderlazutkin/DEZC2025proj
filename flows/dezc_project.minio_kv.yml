@@ -6,13 +6,13 @@ tasks:
     type: io.kestra.plugin.core.kv.Set
     key: ACCESS_KEY_ID
     kvType: STRING
-    value: MxjTHlJywirHFbW7bSOz
+    value: SmwQnTnmfQJq2uTM2ndJ
 
   - id: aws_secret_access_key
     type: io.kestra.plugin.core.kv.Set
     key: SECRET_KEY_ID
     kvType: STRING
-    value: jVprYL2UvdzUTilgkwiYFVishB7s5rgb332oFkGd
+    value: 9ycP0akZQNkNiYniPwcFyD73DRaJzPetaLpHAbV2
 
   - id: bucket_name
     type: io.kestra.plugin.core.kv.Set
@@ -31,6 +31,12 @@ tasks:
     key: ENDPOINT_URL
     kvType: STRING
     value: http://minio:9000
+
+  - id: endpoint
+    type: io.kestra.plugin.core.kv.Set
+    key: ENDPOINT
+    kvType: STRING
+    value: minio:9000
 
   - id: region
     type: io.kestra.plugin.core.kv.Set

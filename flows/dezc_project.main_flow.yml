@@ -34,7 +34,7 @@ tasks:
       LOAD httpfs; 
       SET s3_region        = '{{kv('REGION')}}'; 
       SET s3_url_style     = 'path'; 
-      SET s3_endpoint      = '{{kv('ENDPOINT_URL')}}'; 
+      SET s3_endpoint      = '{{kv('ENDPOINT')}}'; 
       SET s3_use_ssl       = false; 
       SET s3_access_key_id = '{{kv('ACCESS_KEY_ID')}}' ;
       SET s3_secret_access_key='{{kv('SECRET_KEY_ID')}}';
@@ -64,7 +64,7 @@ tasks:
       LOAD httpfs; 
       SET s3_region        = '{{kv('REGION')}}'; 
       SET s3_url_style     = 'path'; 
-      SET s3_endpoint      = '{{kv('ENDPOINT_URL')}}'; 
+      SET s3_endpoint      = '{{kv('ENDPOINT')}}'; 
       SET s3_use_ssl       = false; 
       SET s3_access_key_id = '{{kv('ACCESS_KEY_ID')}}' ;
       SET s3_secret_access_key='{{kv('SECRET_KEY_ID')}}';
@@ -140,7 +140,7 @@ tasks:
           type: io.kestra.plugin.core.runner.Process
         commands:
           - cp {{ outputs.dbt_run.outputFiles['policeuk.duckdb'] }} /data/policeuk.duckdb
-          - sudo chmod 777 /data/policeuk.duckdb
+          - chmod 777 /data/policeuk.duckdb
 
       - id: purge_dbt_files # clear all temporary files after task is done
         type: io.kestra.plugin.core.storage.PurgeCurrentExecutionFiles

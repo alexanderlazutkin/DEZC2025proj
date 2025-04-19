@@ -39,7 +39,10 @@ To configure environment for the project follow instructions bellow
 ### Clone the Repository
 ```sh
 git clone https://github.com/alexanderlazutkin/DEZC2025proj.git
-cd ~/DEZC2025proj
+
+# rename folder
+mv ~/DEZC2025proj ~/project
+cd ~/project
 ```
 
 ### Run Docker Desktop
@@ -49,12 +52,15 @@ sudo docker compose up -d
 
 Build & Start Services
 ```sh
-[+] Running 5/5
- ✔ Network kestra_net    Created                                                         0.3s
- ✔ Container minio       Started                                                        49.9s
- ✔ Container postgres-1  Started                                                        49.8s
- ✔ Container kestra-1    Started                                                         9.5s
+[+] Running 6/6
+ ✔ Network project_kestra_net      Created         0.2s
+ ✔ Volume "project_postgres-data"  Created         0.1s
+ ✔ Volume "project_minio_data"     Created         0.1s
+ ✔ Container project-postgres-1    Started        17.3s
+ ✔ Container minio                 Started        17.6s
+ ✔ Container project-kestra-1      Started         5.3s
 ```
+
 
 ### Run & configure MinIO
 Connect to minio UI http://localhost:9001/login with user: `minioadmin` and password: `minioadmin`
@@ -85,13 +91,8 @@ curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@flows/dezc
 and run the flow
 ![Kestra flow](/img/Kestra%20flow.png "Kestra flow")
 
-Check data file and add permissions to query
-```sh
-cd ~/DEZC2025proj
-sudo chmod 777 ./data/policeuk.duckdb
-```
 Notes:
-- Dbt sources  (`DEZC2025proj/dbt/models/raw/_sources.yml`) configured with bucket name `dezc-project`
+- Dbt sources  (`project/dbt/models/raw/_sources.yml`) configured with bucket name `dezc-project`
 
 
 ### Run & configure Evidence UI 
