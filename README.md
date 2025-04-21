@@ -15,10 +15,10 @@ Using the Police UK (Home | data.police.uk) extract the data related to street-l
 ![Data flow shema](/img/Data%20flow%20schema.png "Data flow shema")
 
 The next technologies were selected for this project
-- Kestra as orchestrator
+- Kestra as orchestrator with declarative approach
 - Dbt as popular transformation framework
-- DuckDB as "pocket" data warehouse and in-progress database
-- Evidence as reporting tool
+- DuckDB as and in-progress database for intermediate tasks and "pocket" data warehouse (next step is to scale to Motherduck)
+- Evidence as lightweight and markdown reporting framework 
 - Minio as S3 Data lake
 
 
@@ -40,7 +40,7 @@ To configure environment for the project follow instructions bellow
 ```sh
 git clone https://github.com/alexanderlazutkin/DEZC2025proj.git
 
-# rename folder
+# rename folder to prevent previous issues with Minio unavailibility from Kestra
 mv ~/DEZC2025proj ~/project
 cd ~/project
 ```
@@ -97,7 +97,7 @@ Notes:
 
 ### Run & configure Evidence UI 
 - Install Evidence with VS Code extension as explained [here](https://docs.evidence.dev/install-evidence/ ) and start Evidence server
-- Copy policeuk.duckdb from `./data/` to ` ./reporting/sources/policeuk/` (if required)
+- Copy policeuk.duckdb from `./data/` to ` ./reporting/sources/policeuk/` (if required. It was implemented in Kestra flow)
 - Run to update reports (if required) 
 ```bash
 npm run sources
