@@ -6,8 +6,8 @@ inputs:
   - id: filename
     type: SELECT
     displayName: Select filename
-    values: ["2025-01", "2024-12"]
-    defaults: "2025-01"
+    values: ["latest","2025-01", "2022-01", "2019-01"]  #https://data.police.uk/data/archive/latest.zip
+    defaults: "latest"
 
 variables:
   url_file: "https://data.police.uk/data/archive/{{inputs.filename}}.zip" # ~1.6Gb  small size test file: "https://getfile.dokpub.com/yandex/get/https://disk.yandex.ru/d/93oVdGQPEdyq-g"

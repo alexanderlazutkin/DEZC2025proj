@@ -26,12 +26,6 @@ tasks:
     kvType: STRING
     value: staging
 
-  - id: endpoint_url
-    type: io.kestra.plugin.core.kv.Set
-    key: ENDPOINT_URL
-    kvType: STRING
-    value: http://minio:9000
-
   - id: endpoint
     type: io.kestra.plugin.core.kv.Set
     key: ENDPOINT

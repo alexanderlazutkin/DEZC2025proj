@@ -7,5 +7,5 @@ tasks:
     accessKeyId: "{{kv('ACCESS_KEY_ID')}}"
     secretKeyId: "{{kv('SECRET_KEY_ID')}}"
     region: "{{kv('REGION')}}"
-    endpoint: "{{kv('ENDPOINT_URL')}}"
+    endpoint: "http://{{kv('ENDPOINT')}}"
     bucket: "{{kv('BUCKET_NAME')}}"
